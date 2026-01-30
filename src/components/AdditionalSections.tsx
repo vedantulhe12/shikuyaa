@@ -110,7 +110,7 @@ const AdditionalSections = () => {
           
           {/* College Logos Grid */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 items-center">
-            {collegeLogos.map((logo, index) => (
+            {collegeLogos.map((_logo, index) => (
               <div 
                 key={index} 
                 className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow flex items-center justify-center h-24"

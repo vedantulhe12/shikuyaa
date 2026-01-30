@@ -3,8 +3,7 @@ import { FaClock, FaPlay, FaCheck } from 'react-icons/fa'
 
 const AssessmentQuestion = () => {
   const [selectedQuestion, setSelectedQuestion] = useState(1)
-  const [answers, setAnswers] = useState<{[key: number]: string}>({})
-  const [markedForReview, setMarkedForReview] = useState<number[]>([])
+
   const [activeTab, setActiveTab] = useState<'code' | 'input' | 'output'>('code')
   const [code, setCode] = useState('.data\nuserinput: .space 20 # reserve space to store user\'s input\n')
   const [selectedLanguage, setSelectedLanguage] = useState('Assembler 32 (Mars 4.5)')
