@@ -77,7 +77,7 @@ const AssessmentStartModal = ({ isOpen, onClose, assessmentTitle, duration }: As
                   <tr className="border-t">
                     <td className="px-4 py-3 text-gray-700">Coding Techniques</td>
                     <td className="px-4 py-3 text-gray-700">1</td>
-                    <td className="px-4 py-3 text-gray-700">100-25</td>
+                    <td className="px-4 py-3 text-gray-700">25</td>
                   </tr>
                 </tbody>
               </table>
