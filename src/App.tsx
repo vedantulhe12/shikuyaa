@@ -8,6 +8,7 @@ import Contact from './pages/Contact'
 import Dashboard from './pages/Dashboard'
 import Assessment from './pages/Assessment'
 import AssessmentQuestion from './pages/AssessmentQuestion'
+import SubmissionSuccess from './pages/SubmissionSuccess'
 
 function App() {
   return (
@@ -26,6 +27,9 @@ function App() {
         
         {/* Assessment Question - Full Screen (No Layout) */}
         <Route path="/assessment/question/:id" element={<AssessmentQuestion />} />
+        
+        {/* Submission Success - Full Screen (No Layout) */}
+        <Route path="/submission-success" element={<SubmissionSuccess />} />
       </Routes>
     </Router>
   )

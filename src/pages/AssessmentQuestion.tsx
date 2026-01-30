@@ -1,10 +1,14 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { FaClock, FaPlay, FaCheck } from 'react-icons/fa'
+import SubmitConfirmationModal from '../components/SubmitConfirmationModal'
 
 const AssessmentQuestion = () => {
+  const navigate = useNavigate()
   const [selectedQuestion, setSelectedQuestion] = useState(1)
-
+  const [showSubmitModal, setShowSubmitModal] = useState(false)
   const [activeTab, setActiveTab] = useState<'code' | 'input' | 'output'>('code')
+  const [questionStatus, setQuestionStatus] = useState<{[key: number]: string}>({})
   const [code, setCode] = useState('.data\nuserinput: .space 20 # reserve space to store user\'s input\n')
   const [selectedLanguage, setSelectedLanguage] = useState('Assembler 32 (Mars 4.5)')
   const [timeRemaining, setTimeRemaining] = useState(3600) // 1 hour in seconds
@@ -36,9 +40,32 @@ const AssessmentQuestion = () => {
 
   const time = formatTime(timeRemaining)
 
+  const handleSubmitClick = () => {
+    // Mark current question as solved when main screen submit is clicked
+    setQuestionStatus(prev => ({ ...prev, [selectedQuestion]: 'solved' }))
+  }
+
+  const handlePanelSubmit = () => {
+    // Show confirmation modal when panel submit button is clicked
+    setShowSubmitModal(true)
+  }
+
+  const handleConfirmSubmit = () => {
+    setShowSubmitModal(false)
+    navigate('/dashboard/assessment')
+  }
+
   const questions = [
-    { id: 1, status: 'not-attempted' }
+    { id: 1, status: questionStatus[1] || 'not-attempted' }
   ]
+
+  const getQuestionStats = () => {
+    const total = questions.length
+    const attempted = questions.filter(q => q.status === 'solved').length
+    const notAttempted = questions.filter(q => q.status === 'not-attempted').length
+    const reviewed = questions.filter(q => q.status === 'reviewed').length
+    return { total, attempted, notAttempted, reviewed, reported: 0 }
+  }
 
   const getStatusColor = (status: string) => {
     switch(status) {
@@ -147,7 +174,10 @@ const AssessmentQuestion = () => {
                     <FaClock className="w-3 h-3 mr-1" />
                     UNSOLVED
                   </span>
-                  <button className="flex items-center space-x-2 px-4 py-2 bg-white border border-gray-300 rounded hover:bg-gray-50">
+                  <button 
+                    onClick={handleSubmitClick}
+                    className="flex items-center space-x-2 px-4 py-2 bg-white border border-gray-300 rounded hover:bg-gray-50"
+                  >
                     <FaCheck className="w-4 h-4 text-gray-600" />
                     <span className="font-medium">SUBMIT</span>
                   </button>
@@ -248,23 +278,29 @@ const AssessmentQuestion = () => {
         <div className="flex justify-between items-start mb-6">
           <div className="flex flex-col items-center">
             <div className="w-12 h-12 bg-gray-200 border-2 border-gray-300 rounded flex items-center justify-center mb-2">
-              <span className="text-xl font-semibold text-gray-700">1</span>
+              <span className="text-xl font-semibold text-gray-700">{getQuestionStats().notAttempted}</span>
             </div>
             <span className="text-xs text-gray-600 text-center">Not<br/>Attempted</span>
           </div>
           <div className="flex flex-col items-center">
             <div className="w-12 h-12 bg-pink-500 rounded flex items-center justify-center mb-2">
-              <span className="text-xl font-semibold text-white">0</span>
+              <span className="text-xl font-semibold text-white">{getQuestionStats().attempted}</span>
             </div>
             <span className="text-xs text-gray-600 text-center">Solved</span>
           </div>
           <div className="flex flex-col items-center">
             <div className="w-12 h-12 bg-gray-400 rounded flex items-center justify-center mb-2">
-              <span className="text-xl font-semibold text-white">0</span>
+              <span className="text-xl font-semibold text-white">{getQuestionStats().reviewed}</span>
             </div>
             <span className="text-xs text-gray-600 text-center">Reviewed</span>
           </div>
         </div>
+        <button
+          onClick={handlePanelSubmit}
+          className="w-full mb-4 px-6 py-3 bg-pink-600 text-white rounded-lg font-semibold hover:bg-pink-700 transition-colors"
+        >
+          SUBMIT TEST
+        </button>
         <div className="border-t pt-4">
           {questions.map((q) => (
             <button
@@ -281,6 +317,13 @@ const AssessmentQuestion = () => {
           ))}
         </div>
       </aside>
+
+      <SubmitConfirmationModal
+        isOpen={showSubmitModal}
+        onClose={() => setShowSubmitModal(false)}
+        onConfirm={handleConfirmSubmit}
+        stats={getQuestionStats()}
+      />
     </div>
   )
 }
